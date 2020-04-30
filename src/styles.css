@@ -1,0 +1,9 @@
+body {
+    font-family: Helvetica;
+}
+canvas {
+    border: 1px solid lightgrey;
+    padding: 0;
+    margin: auto;
+    display: block;
+}
