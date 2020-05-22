@@ -15,14 +15,15 @@ export function easeInOutCubic(x) {
   return x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2
 }
 
-let framesDuration = 100
-let progress = 0
+let framesDuration = 50
 
 export function update(state) {
-  state.x = easeInOutCubic(progress) * GAME_WIDTH / 3
-  progress += 1 / framesDuration
-  if (progress > 1) {
-    state.x = 5
-    progress = 0
+  if (state.progress < 1) {
+    state.x = easeInOutCubic(state.progress) * GAME_WIDTH / 3
+    state.progress += 1 / framesDuration
   }
+}
+
+function testScenario() {
+
 }
