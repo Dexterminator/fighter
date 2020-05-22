@@ -2,6 +2,8 @@ import "./styles.css"
 import {GAME_HEIGHT, GAME_WIDTH, render, update} from "./main"
 import Peer from "peerjs"
 
+const FRAME_DELAY = 3
+
 const initialState = JSON.stringify({
   x: 5,
   y: 50,
@@ -55,22 +57,20 @@ function initPeer() {
   })
 }
 
-function testScenario() {
-  addTitle('Test 1')
+function testScenario(initialState, inputsByFrame, frameDuration, title) {
+  addTitle(title)
   const canvas = initCanvas()
   const ctx = canvas.getContext("2d")
   let state = JSON.parse(initialState)
 
-  const frameDuration = 60
   let frames = 0
-
   function main() {
     let stopMain = window.requestAnimationFrame(main)
-    update(state)
+    console.log(inputsByFrame[frames])
+    update(state, inputsByFrame[frames])
     render(state, ctx, canvas)
     frames++
     if (frames % frameDuration === 0) {
-      console.log(state.x)
       frames = 0
       state = JSON.parse(initialState)
     }
@@ -79,20 +79,58 @@ function testScenario() {
   main()
 }
 
+function networkSendInputs(inputsByFrame) {
+
+}
+
+function test1() {
+  const frameDuration = 60
+  const inputsByFrame = {}
+  for (let i = 0; i < frameDuration; i++) {
+    inputsByFrame[i] = new Set(["KeyD"])
+  }
+  testScenario(initialState, inputsByFrame, frameDuration, 'Test 1')
+}
+
+function test2() {
+  const frameDuration = 120
+  const inputsByFrame = {}
+  for (let i = 0; i < frameDuration; i++) {
+    inputsByFrame[i] = new Set(["KeyD"])
+  }
+  testScenario(initialState, inputsByFrame, frameDuration, 'Test 2')
+}
+
 (function () {
   const canvas = initCanvas()
   const ctx = canvas.getContext("2d")
   const state = JSON.parse(initialState)
+  let frames = 0
   initPeer()
+  const inputsByFrame = {}
+
+  const currentInputs = new Set()
+  window.addEventListener('keydown', function (e) {
+    currentInputs.add(e.code)
+  })
+  window.addEventListener('keyup', function (e) {
+    currentInputs.delete(e.code)
+  })
 
   function main() {
     let stopMain = window.requestAnimationFrame(main)
-    update(state)
+    inputsByFrame[frames + FRAME_DELAY] = new Set(currentInputs)
+    networkSendInputs(inputsByFrame)
+    const inputs = inputsByFrame[frames] || new Set()
+    update(state, inputs)
     render(state, ctx, canvas)
+    frames++
+    delete inputsByFrame[frames - 10]
   }
 
   main()
-  testScenario()
+  test1()
+  test2()
 })()
 
 

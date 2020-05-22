@@ -17,11 +17,17 @@ export function easeInOutCubic(x) {
 
 let framesDuration = 50
 
-export function update(state) {
-  if (state.progress < 1) {
-    state.x = easeInOutCubic(state.progress) * GAME_WIDTH / 3
-    state.progress += 1 / framesDuration
+export function update(state, inputs = new Set()) {
+  if (inputs.has("KeyA")) {
+    state.x -= 10
+  } else if (inputs.has("KeyD")) {
+    state.x += 10
   }
+
+  // if (state.progress < 1) {
+  //   state.x = easeInOutCubic(state.progress) * GAME_WIDTH / 3
+  //   state.progress += 1 / framesDuration
+  // }
 }
 
 function testScenario() {
