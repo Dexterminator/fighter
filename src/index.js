@@ -12,11 +12,14 @@ import {render, update, mainConstants, addDebug, initCanvas, initPeer, networkSe
   const debugConfig = {savedState: mainConstants.initialState}
 
   const currentInputs = new Set()
+  const player2Inputs = new Set()
   window.addEventListener('keydown', function (e) {
     currentInputs.add(mainConstants.inputsByKey[e.code])
+    player2Inputs.add(mainConstants.inputsByKey2[e.code])
   })
   window.addEventListener('keyup', function (e) {
     currentInputs.delete(mainConstants.inputsByKey[e.code])
+    player2Inputs.delete(mainConstants.inputsByKey2[e.code])
   })
 
   function main() {
@@ -24,7 +27,6 @@ import {render, update, mainConstants, addDebug, initCanvas, initPeer, networkSe
     inputsByFrame[frames + mainConstants.FRAME_DELAY] = new Set(currentInputs)
     networkSendInputs(inputsByFrame)
     const player1Inputs = inputsByFrame[frames] || new Set()
-    const player2Inputs = new Set()
     update(state, player1Inputs, player2Inputs)
     statesByFrame[frames] = JSON.stringify(state)
     render(state, ctx, canvas)

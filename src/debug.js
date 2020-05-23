@@ -47,10 +47,9 @@ function testScenario(initialState, player1InputsByFrame, player2InputsByFrame, 
 export function test1() {
   const frameDuration = 50
   const player1InputsByFrame = {}
-  const player2InputsByFrame = {}
+  const player2InputsByFrame = {0: new Set(['a'])}
   for (let i = 0; i < frameDuration / 2; i++) {
     player1InputsByFrame[i] = new Set(['right'])
-    player2InputsByFrame[i] = new Set(['left'])
   }
   const state = JSON.parse(mainConstants.initialState)
   testScenario(state, player1InputsByFrame, player2InputsByFrame, frameDuration, 'Test 1')

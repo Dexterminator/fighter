@@ -52,7 +52,7 @@ export const CROUCHING_STATES = new Set([playerStates.CROUCHING, playerStates.CR
 export const BLOCKING_STATES = new Set([playerStates.BLOCKING, playerStates.CROUCH_BLOCKING])
 
 const PUNCH_RANGE = PLAYER_WIDTH * 2
-export const animations = {
+export const animations = Object.freeze({
   punch: {
     [animationStates.WINDUP]: {
       duration: 5,
@@ -75,7 +75,7 @@ export const animations = {
       endOffset: 0
     },
   }
-}
+})
 
 const playerState = {
   state: playerStates.IDLE,
@@ -116,4 +116,12 @@ export const inputsByKey = {
   KeyS: 'down',
   KeyC: 'a',
   KeyV: 'block'
+}
+
+export const inputsByKey2 = {
+  ArrowLeft: 'left',
+  ArrowRight: 'right',
+  ArrowDown: 'down',
+  Enter: 'a',
+  ShiftRight: 'block'
 }

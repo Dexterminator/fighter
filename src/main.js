@@ -1,6 +1,6 @@
 import {renderState} from "./render"
 import {updateState} from "./update"
-import {FRAME_DELAY, initialState, inputsByKey} from "./constants"
+import {FRAME_DELAY, initialState, inputsByKey, inputsByKey2} from "./constants"
 import * as debug from "./debug"
 import * as dom from "./dom"
 import * as network from "./network"
@@ -17,14 +17,15 @@ export function update(state, player1Inputs = new Set(), player2Inputs = new Set
 export const mainConstants = {
   FRAME_DELAY: FRAME_DELAY,
   initialState: initialState,
-  inputsByKey: inputsByKey
+  inputsByKey: inputsByKey,
+  inputsByKey2: inputsByKey2
 }
 
 export function addDebug(state, debugConfig) {
-  debug.addDebug(state, debugConfig)
-  debug.test1()
-  debug.test2()
-  debug.test3()
+  // debug.addDebug(state, debugConfig)
+  // debug.test1()
+  // debug.test2()
+  // debug.test3()
 }
 
 export function initCanvas() {

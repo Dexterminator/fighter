@@ -19,12 +19,15 @@ import {easeInOutCubic, getTopY, isOverlapping} from "./math"
 function updateHand(player) {
   const offset = BLOCKING_STATES.has(player.state) ? 0.5 : 0.8
   const hand = player.hand
-  hand.x = player.x + player.width * offset * (player.orientation === orientations.FACING_RIGHT ? 1 : -1)
+  const number = player.orientation === orientations.FACING_RIGHT ? 1 : -1
+  hand.x = player.x + player.width * offset * number
   if (player.state === playerStates.PUNCHING) {
     const anim = player.animation
     const stateConfig = animations.punch[anim.state]
     const progress = easeInOutCubic(anim.stateProgress / stateConfig.duration)
-    hand.x += stateConfig.startOffset + (stateConfig.endOffset - stateConfig.startOffset) * progress
+    const startOffset = stateConfig.startOffset * number
+    const endOffset = stateConfig.endOffset * number
+    hand.x += startOffset + (endOffset - startOffset) * progress
     anim.stateProgress++
     if (anim.stateProgress === stateConfig.duration) {
       anim.state = nextAnimationState[anim.state]
@@ -46,7 +49,7 @@ function handleHit(player, otherPlayer) {
       if (!blockedHighAttack && !blockedLowAttack) {
         player.state = playerStates.HITSTUN
         player.hp -= 10
-        player.stun = 30
+        player.stun = 25
       }
     }
   }
