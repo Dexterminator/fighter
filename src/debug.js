@@ -57,14 +57,26 @@ export function test1() {
 }
 
 export function test2() {
-  const frameDuration = 120
-  const inputsByFrame = {
+  const frameDuration = 240
+  const player1InputsByFrame = {
     0: new Set(['a']),
-    60: new Set(['down', 'a'])
+    60: new Set(['down', 'a']),
+    120: new Set(['a']),
+    180: new Set(['down', 'a']),
   }
+
+  const player2InputsByFrame = {}
+  for (let i = 0; i < 60; i++) {
+    player2InputsByFrame[i] = new Set(['block'])
+  }
+
+  for (let i = 60; i < 120; i++) {
+    player2InputsByFrame[i] = new Set(['block', 'down'])
+  }
+
   const state = JSON.parse(mainConstants.initialState)
   state.player2.x = 430
-  testScenario(state, inputsByFrame, {}, frameDuration, 'Test 2')
+  testScenario(state, player1InputsByFrame, player2InputsByFrame, frameDuration, 'Test 2')
 }
 
 export function test3() {
@@ -73,9 +85,13 @@ export function test3() {
     0: new Set(['a']),
     60: new Set(['down', 'a'])
   }
+  const player2InputsByFrame = {}
+  for (let i = 0; i < frameDuration; i++) {
+    player2InputsByFrame[i] = new Set(['down'])
+  }
   const state = JSON.parse(mainConstants.initialState)
-  state.player2.x = 480
-  testScenario(state, inputsByFrame, {}, frameDuration, 'Test 3')
+  state.player2.x = 400
+  testScenario(state, inputsByFrame, player2InputsByFrame, frameDuration, 'Test 3')
 }
 
 if (module.hot) {

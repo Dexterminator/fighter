@@ -1,7 +1,8 @@
 import {
-  animationStates, GAME_WIDTH,
+  animationStates,
+  BLOCKING_STATES,
+  GAME_WIDTH,
   LIFE_BAR_WIDTH,
-  orientations,
   PLAYER_1_COLOR,
   PLAYER_2_COLOR,
   playerStates,
@@ -21,7 +22,7 @@ function renderHand(ctx, player) {
   const fillStyle = ctx.fillStyle
   if (player.state === playerStates.PUNCHING) {
     ctx.fillStyle = colorByAnimationState[player.animation.state] || fillStyle
-  } else if (player.state === playerStates.BLOCKING) {
+  } else if (BLOCKING_STATES.has(player.state)) {
     ctx.fillStyle = '#2aaadc'
   }
   ctx.fill(circle)

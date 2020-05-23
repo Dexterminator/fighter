@@ -23,7 +23,8 @@ export const playerStates = {
   CROUCHING: 2,
   PUNCHING: 3,
   BLOCKING: 4,
-  HITSTUN: 5
+  CROUCH_BLOCKING: 5,
+  HITSTUN: 6
 }
 
 export const animationStates = {
@@ -33,6 +34,11 @@ export const animationStates = {
   RECOVERY: 3
 }
 
+export const attackProperties = {
+  HIGH: 0,
+  LOW: 1
+}
+
 export const nextAnimationState = {
   [animationStates.WINDUP]: animationStates.STARTUP,
   [animationStates.STARTUP]: animationStates.ACTIVE,
@@ -40,8 +46,10 @@ export const nextAnimationState = {
   [animationStates.RECOVERY]: null
 }
 
-export const READY_STATES = new Set([playerStates.IDLE, playerStates.WALKING, playerStates.CROUCHING, playerStates.BLOCKING])
+export const READY_STATES = new Set([playerStates.IDLE, playerStates.WALKING, playerStates.CROUCHING, playerStates.BLOCKING, playerStates.CROUCH_BLOCKING])
 export const STANDING_STATES = new Set([playerStates.IDLE, playerStates.WALKING])
+export const CROUCHING_STATES = new Set([playerStates.CROUCHING, playerStates.CROUCH_BLOCKING])
+export const BLOCKING_STATES = new Set([playerStates.BLOCKING, playerStates.CROUCH_BLOCKING])
 
 const PUNCH_RANGE = PLAYER_WIDTH * 2
 export const animations = {
@@ -85,8 +93,10 @@ const playerState = {
     y: 0,
     width: HAND_WIDTH,
     height: HAND_WIDTH,
+    attackProperty: attackProperties.LOW
   }
 }
+
 export const initialState = JSON.stringify({
   player1: Object.assign({
     id: 'player1',

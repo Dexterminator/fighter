@@ -1,16 +1,23 @@
 import {
   animations,
   animationStates,
+  attackProperties,
+  BLOCKING_STATES,
+  CROUCHING_STATES,
   nextAnimationState,
   orientations,
-  PLAYER_CROUCHING_HEIGHT, PLAYER_CROUCHING_Y, PLAYER_STANDING_HEIGHT, PLAYER_STARTING_Y,
+  PLAYER_CROUCHING_HEIGHT,
+  PLAYER_CROUCHING_Y,
+  PLAYER_STANDING_HEIGHT,
+  PLAYER_STARTING_Y,
   playerStates,
-  READY_STATES, STANDING_STATES
+  READY_STATES,
+  STANDING_STATES
 } from "./constants"
 import {easeInOutCubic, getTopY, isOverlapping} from "./math"
 
 function updateHand(player) {
-  const offset = player.state === playerStates.BLOCKING ? 0.5 : 0.8
+  const offset = BLOCKING_STATES.has(player.state) ? 0.5 : 0.8
   const hand = player.hand
   hand.x = player.x + player.width * offset * (player.orientation === orientations.FACING_RIGHT ? 1 : -1)
   if (player.state === playerStates.PUNCHING) {
@@ -28,15 +35,19 @@ function updateHand(player) {
       player.state = playerStates.IDLE
     }
   }
-  hand.y = getTopY(player) + hand.height * 2
+  hand.y = getTopY(player) + hand.height * 1.8
 }
 
 function handleHit(player, otherPlayer) {
   if (otherPlayer.animation && otherPlayer.animation.state === animationStates.ACTIVE) {
-    if (isOverlapping(player, otherPlayer.hand) && player.state !== playerStates.BLOCKING && player.state !== playerStates.HITSTUN) {
-      player.state = playerStates.HITSTUN
-      player.hp -= 10
-      player.stun = 30
+    if (isOverlapping(player, otherPlayer.hand) && player.state !== playerStates.HITSTUN) {
+      const blockedHighAttack = otherPlayer.hand.attackProperty === attackProperties.HIGH && player.state === playerStates.BLOCKING
+      const blockedLowAttack = otherPlayer.hand.attackProperty === attackProperties.LOW && player.state === playerStates.CROUCH_BLOCKING
+      if (!blockedHighAttack && !blockedLowAttack) {
+        player.state = playerStates.HITSTUN
+        player.hp -= 10
+        player.stun = 30
+      }
     }
   }
 }
@@ -48,13 +59,14 @@ function updatePlayer(player, otherPlayer, inputs) {
       player.state = playerStates.IDLE
     }
   }
+
   handleHit(player, otherPlayer)
   if (READY_STATES.has(player.state)) {
-    if (!inputs.has('down') && player.state === playerStates.CROUCHING) {
+    if (!inputs.has('down') && CROUCHING_STATES.has(player.state)) {
       player.state = playerStates.IDLE
     }
 
-    if (!inputs.has('block') && player.state === playerStates.BLOCKING) {
+    if (!inputs.has('block') && BLOCKING_STATES.has(player.state)) {
       player.state = playerStates.IDLE
     }
 
@@ -68,10 +80,19 @@ function updatePlayer(player, otherPlayer, inputs) {
     }
 
     if (inputs.has('a')) {
+      if (CROUCHING_STATES.has(player.state)) {
+        player.hand.attackProperty = attackProperties.LOW
+      } else {
+        player.hand.attackProperty = attackProperties.HIGH
+      }
       player.state = playerStates.PUNCHING
       player.animation.state = animationStates.WINDUP
     } else if (inputs.has('block')) {
-      player.state = playerStates.BLOCKING
+      if (CROUCHING_STATES.has(player.state)) {
+        player.state = playerStates.CROUCH_BLOCKING
+      } else {
+        player.state = playerStates.BLOCKING
+      }
     } else if (STANDING_STATES.has(player.state)) {
       if (inputs.has('left')) {
         player.x -= 10
