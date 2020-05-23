@@ -7,8 +7,15 @@ canvas {
     padding: 0;
     margin: auto;
     display: block;
+    margin-bottom: 1rem;
 }
 
 h1 {
     text-align: center;
+}
+
+button {
+    padding: 5px;
+    display: block;
+    margin: auto auto 5px;
 }

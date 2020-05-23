@@ -20,6 +20,23 @@ function initCanvas() {
   return canvas
 }
 
+function addDebug(state, debug) {
+  const button = document.createElement("button")
+  document.body.append(button)
+  button.innerHTML = 'Log state'
+  button.onclick = () => console.log(JSON.stringify(state))
+
+  const button2 = document.createElement("button")
+  document.body.append(button2)
+  button2.innerHTML = 'Save state'
+  button2.onclick = () => debug.savedState = JSON.stringify(state)
+
+  const button3 = document.createElement("button")
+  document.body.append(button3)
+  button3.innerHTML = 'Restore state'
+  button3.onclick = () => Object.assign(state, JSON.parse(debug.savedState))
+}
+
 function addTitle(text) {
   const h1 = document.createElement("h1")
   document.body.append(h1)
@@ -66,7 +83,6 @@ function testScenario(initialState, inputsByFrame, frameDuration, title) {
   let frames = 0
   function main() {
     let stopMain = window.requestAnimationFrame(main)
-    console.log(inputsByFrame[frames])
     update(state, inputsByFrame[frames])
     render(state, ctx, canvas)
     frames++
@@ -108,6 +124,8 @@ function test2() {
   let frames = 0
   initPeer()
   const inputsByFrame = {}
+  const statesByFrame = {}
+  const debug = {savedState: initialState}
 
   const currentInputs = new Set()
   window.addEventListener('keydown', function (e) {
@@ -123,12 +141,15 @@ function test2() {
     networkSendInputs(inputsByFrame)
     const inputs = inputsByFrame[frames] || new Set()
     update(state, inputs)
+    statesByFrame[frames] = JSON.stringify(state)
     render(state, ctx, canvas)
     frames++
     delete inputsByFrame[frames - 10]
+    delete statesByFrame[frames - 10]
   }
 
   main()
+  addDebug(state, debug)
   test1()
   test2()
 })()
