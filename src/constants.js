@@ -37,7 +37,7 @@ export const nextAnimationState = {
   [animationStates.RECOVERY]: null
 }
 
-export const READY_STATES = new Set([playerStates.IDLE, playerStates.WALKING, playerStates.CROUCHING])
+export const READY_STATES = new Set([playerStates.IDLE, playerStates.WALKING, playerStates.CROUCHING, playerStates.BLOCKING])
 export const STANDING_STATES = new Set([playerStates.IDLE, playerStates.WALKING])
 
 const PUNCH_RANGE = PLAYER_WIDTH * 2

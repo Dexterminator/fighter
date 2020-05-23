@@ -13,6 +13,8 @@ function renderHand(ctx, player) {
   const fillStyle = ctx.fillStyle
   if (player.state === playerStates.PUNCHING) {
     ctx.fillStyle = colorByAnimationState[player.animation.state] || fillStyle
+  } else if (player.state === playerStates.BLOCKING) {
+    ctx.fillStyle = '#2aaadc'
   }
   ctx.fill(circle)
 

@@ -10,7 +10,7 @@ import {
 import {easeInOutCubic, getTopY} from "./math"
 
 function updateHand(player) {
-  const offset = 0.6
+  const offset = player.state === playerStates.BLOCKING ? 0.3 : 0.6
   const hand = player.hand
   hand.x = player.x + player.width * offset * (player.orientation === orientations.FACING_RIGHT ? 1 : -1)
   if (player.state === playerStates.PUNCHING) {
@@ -37,6 +37,10 @@ function updatePlayer(player, inputs) {
       player.state = playerStates.IDLE
     }
 
+    if (!inputs.has('block') && player.state === playerStates.BLOCKING) {
+      player.state = playerStates.IDLE
+    }
+
     if (inputs.has('down')) {
       player.state = playerStates.CROUCHING
       player.height = PLAYER_CROUCHING_HEIGHT
@@ -49,6 +53,8 @@ function updatePlayer(player, inputs) {
     if (inputs.has('a')) {
       player.state = playerStates.PUNCHING
       player.animation.state = animationStates.WINDUP
+    } else if (inputs.has('block')) {
+      player.state = playerStates.BLOCKING
     } else if (STANDING_STATES.has(player.state)) {
       if (inputs.has('left')) {
         player.x -= 10
