@@ -1,4 +1,12 @@
-import {animationStates, orientations, PLAYER_1_COLOR, PLAYER_2_COLOR, playerStates} from "./constants"
+import {
+  animationStates, GAME_WIDTH,
+  LIFE_BAR_WIDTH,
+  orientations,
+  PLAYER_1_COLOR,
+  PLAYER_2_COLOR,
+  playerStates,
+  STARTING_HP
+} from "./constants"
 import {getLeftX, getTopY} from "./math"
 
 const colorByAnimationState = {
@@ -29,11 +37,19 @@ function renderPlayer(ctx, player) {
   ctx.globalAlpha = 1
 }
 
+function renderLifeBar(ctx, player, x) {
+  const offset = player.hp / STARTING_HP
+  ctx.strokeRect(x, 40, LIFE_BAR_WIDTH, 30)
+  ctx.fillRect(x, 40, Math.max(LIFE_BAR_WIDTH * offset, 0), 30)
+}
+
 export function renderState(ctx, state) {
   ctx.fillStyle = PLAYER_1_COLOR
   renderPlayer(ctx, state.player1)
+  renderLifeBar(ctx, state.player1, 50)
   ctx.fillStyle = PLAYER_2_COLOR
   renderPlayer(ctx, state.player2)
+  renderLifeBar(ctx, state.player2, GAME_WIDTH- LIFE_BAR_WIDTH - 50)
 
   ctx.fillStyle = PLAYER_1_COLOR
   renderHand(ctx, state.player1)

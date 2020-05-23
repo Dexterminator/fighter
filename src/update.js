@@ -33,15 +33,22 @@ function updateHand(player) {
 
 function handleHit(player, otherPlayer) {
   if (otherPlayer.animation && otherPlayer.animation.state === animationStates.ACTIVE) {
-    if (isOverlapping(player, otherPlayer.hand) && player.state !== playerStates.BLOCKING) {
+    if (isOverlapping(player, otherPlayer.hand) && player.state !== playerStates.BLOCKING && player.state !== playerStates.HITSTUN) {
       player.state = playerStates.HITSTUN
+      player.hp -= 10
+      player.stun = 30
     }
   }
 }
 
 function updatePlayer(player, otherPlayer, inputs) {
+  if (player.state === playerStates.HITSTUN) {
+    player.stun--
+    if (player.stun === 0) {
+      player.state = playerStates.IDLE
+    }
+  }
   handleHit(player, otherPlayer)
-
   if (READY_STATES.has(player.state)) {
     if (!inputs.has('down') && player.state === playerStates.CROUCHING) {
       player.state = playerStates.IDLE

@@ -7,6 +7,8 @@ export const PLAYER_STANDING_HEIGHT = 250
 export const PLAYER_CROUCHING_HEIGHT = 150
 export const PLAYER_STARTING_Y = 500
 export const PLAYER_CROUCHING_Y = PLAYER_STARTING_Y + (PLAYER_STANDING_HEIGHT - PLAYER_CROUCHING_HEIGHT) * 0.5
+export const STARTING_HP = 100
+export const LIFE_BAR_WIDTH = 300
 const HAND_WIDTH = 40
 const PLAYER_WIDTH = 80
 
@@ -72,6 +74,8 @@ const playerState = {
   width: PLAYER_WIDTH,
   height: PLAYER_STANDING_HEIGHT,
   y: PLAYER_STARTING_Y,
+  hp: STARTING_HP,
+  stun: 0,
   animation: {
     state: null,
     stateProgress: 0
@@ -85,10 +89,12 @@ const playerState = {
 }
 export const initialState = JSON.stringify({
   player1: Object.assign({
+    id: 'player1',
     x: PLAYER_WIDTH * 2,
     orientation: orientations.FACING_RIGHT
   }, playerState),
   player2: Object.assign({
+    id: 'player2',
     x: GAME_WIDTH - PLAYER_WIDTH * 2,
     orientation: orientations.FACING_LEFT
   }, playerState),
