@@ -55,7 +55,7 @@ export function test1() {
 }
 
 export function test2() {
-  const frameDuration = 120
+  const frameDuration = 60
   const inputsByFrame = {0: new Set(['a'])}
   testScenario(mainConstants.initialState, inputsByFrame, {}, frameDuration, 'Test 2')
 }
