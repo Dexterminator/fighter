@@ -1,4 +1,3 @@
-
 import {GAME_HEIGHT, GAME_WIDTH} from "./constants"
 
 export function initCanvas() {
@@ -9,9 +8,8 @@ export function initCanvas() {
   return canvas
 }
 
-export function addTitle(text) {
+export function addTitle() {
   const h1 = document.createElement("h1")
   document.body.append(h1)
-  h1.innerHTML = text
   return h1
 }

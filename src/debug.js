@@ -1,6 +1,4 @@
-import {addTitle, initCanvas} from "./dom"
-import {render, update} from "./main"
-import {initialState} from "./constants"
+import {render, update, mainConstants, initCanvas, addTitle} from "./main"
 
 export function addDebug(state, debug) {
   const button = document.createElement("button")
@@ -23,7 +21,7 @@ export function addDebug(state, debug) {
 }
 
 function testScenario(initialState, player1InputsByFrame, player2InputsByFrame, frameDuration, title) {
-  addTitle(title)
+  const h1 = addTitle()
   const canvas = initCanvas()
   const ctx = canvas.getContext("2d")
   let state = JSON.parse(initialState)
@@ -32,6 +30,7 @@ function testScenario(initialState, player1InputsByFrame, player2InputsByFrame, 
 
   function main() {
     let stopMain = window.requestAnimationFrame(main)
+    h1.innerHTML = title + ', progress: ' + Math.round(frames/frameDuration * 100) + '%'
     update(state, player1InputsByFrame[frames], player2InputsByFrame[frames])
     render(state, ctx, canvas)
     frames++
@@ -49,23 +48,20 @@ export function test1() {
   const player1InputsByFrame = {}
   const player2InputsByFrame = {}
   for (let i = 0; i < frameDuration; i++) {
-    player1InputsByFrame[i] = new Set(["right"])
-    player2InputsByFrame[i] = new Set(["left"])
+    player1InputsByFrame[i] = new Set(['right'])
+    player2InputsByFrame[i] = new Set(['left'])
   }
-  testScenario(initialState, player1InputsByFrame, player2InputsByFrame, frameDuration, 'Test 1')
+  testScenario(mainConstants.initialState, player1InputsByFrame, player2InputsByFrame, frameDuration, 'Test 1')
 }
 
 export function test2() {
   const frameDuration = 120
-  const inputsByFrame = {}
-  for (let i = 0; i < frameDuration; i++) {
-    inputsByFrame[i] = new Set(["right"])
-  }
-  testScenario(initialState, inputsByFrame, {}, frameDuration, 'Test 2')
+  const inputsByFrame = {0: new Set(['a'])}
+  testScenario(mainConstants.initialState, inputsByFrame, {}, frameDuration, 'Test 2')
 }
 
 if (module.hot) {
   module.hot.accept('./main.js', function () {
-    console.log('Accepting the updated main module!')
+    console.log('Debug: Accepting the updated main module!')
   })
 }

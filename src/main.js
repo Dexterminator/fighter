@@ -30,6 +30,10 @@ export function initCanvas() {
   return dom.initCanvas()
 }
 
+export function addTitle() {
+  return dom.addTitle()
+}
+
 export function initPeer() {
   network.initPeer()
 }

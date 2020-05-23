@@ -13,10 +13,63 @@ export const orientations = {
   FACING_LEFT: 2
 }
 
+export const playerStates = {
+  IDLE: 0,
+  WALKING: 1,
+  PUNCHING: 2
+}
+
+export const animationStates = {
+  STARTUP: 0,
+  WINDUP: 1,
+  ACTIVE: 2,
+  RECOVERY: 3
+}
+
+export const nextAnimationState = {
+  [animationStates.WINDUP]: animationStates.STARTUP,
+  [animationStates.STARTUP]: animationStates.ACTIVE,
+  [animationStates.ACTIVE]: animationStates.RECOVERY,
+  [animationStates.RECOVERY]: null
+}
+
+export const READY_STATES = new Set([playerStates.IDLE, playerStates.WALKING])
+
+const PUNCH_RANGE = PLAYER_WIDTH * 2
+export const animations = {
+  punch: {
+    [animationStates.WINDUP]: {
+      duration: 5,
+      startOffset: 0,
+      endOffset: -20
+    },
+    [animationStates.STARTUP]: {
+      duration: 5,
+      startOffset: 0,
+      endOffset: PUNCH_RANGE
+    },
+    [animationStates.ACTIVE]: {
+      duration: 5,
+      startOffset: PUNCH_RANGE,
+      endOffset: PUNCH_RANGE
+    },
+    [animationStates.RECOVERY]: {
+      duration: 15,
+      startOffset: PUNCH_RANGE,
+      endOffset: 0
+    },
+  }
+}
+
 const playerState = {
+  state: playerStates.IDLE,
   width: PLAYER_WIDTH,
   height: PLAYER_HEIGHT,
   y: PLAYER_STARTING_Y,
+  animation: {
+    state: null,
+    stateProgress: 0
+  },
   hand: {
     x: 0,
     y: 0,
@@ -39,6 +92,6 @@ export const inputsByKey = {
   KeyA: 'left',
   KeyD: 'right',
   KeyS: 'down',
-  KeyC: 'block',
-  KeyV: 'a'
+  KeyC: 'a',
+  KeyV: 'block'
 }

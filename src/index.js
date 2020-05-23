@@ -6,7 +6,7 @@ import {render, update, mainConstants, addDebug, initCanvas, initPeer, networkSe
   const ctx = canvas.getContext("2d")
   const state = JSON.parse(mainConstants.initialState)
   let frames = 0
-  initPeer()
+  // initPeer()
   const inputsByFrame = {}
   const statesByFrame = {}
   const debugConfig = {savedState: mainConstants.initialState}
@@ -39,6 +39,6 @@ import {render, update, mainConstants, addDebug, initCanvas, initPeer, networkSe
 
 if (module.hot) {
   module.hot.accept('./main.js', function () {
-    console.log('Accepting the updated main module!')
+    console.log('Index: Accepting the updated main module!')
   })
 }
