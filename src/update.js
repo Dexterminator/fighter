@@ -7,10 +7,10 @@ import {
   playerStates,
   READY_STATES, STANDING_STATES
 } from "./constants"
-import {easeInOutCubic, getTopY} from "./math"
+import {easeInOutCubic, getTopY, isOverlapping} from "./math"
 
 function updateHand(player) {
-  const offset = player.state === playerStates.BLOCKING ? 0.3 : 0.6
+  const offset = player.state === playerStates.BLOCKING ? 0.5 : 0.8
   const hand = player.hand
   hand.x = player.x + player.width * offset * (player.orientation === orientations.FACING_RIGHT ? 1 : -1)
   if (player.state === playerStates.PUNCHING) {
@@ -31,7 +31,17 @@ function updateHand(player) {
   hand.y = getTopY(player) + hand.height * 2
 }
 
-function updatePlayer(player, inputs) {
+function handleHit(player, otherPlayer) {
+  if (otherPlayer.animation && otherPlayer.animation.state === animationStates.ACTIVE) {
+    if (isOverlapping(player, otherPlayer.hand) && player.state !== playerStates.BLOCKING) {
+      player.state = playerStates.HITSTUN
+    }
+  }
+}
+
+function updatePlayer(player, otherPlayer, inputs) {
+  handleHit(player, otherPlayer)
+
   if (READY_STATES.has(player.state)) {
     if (!inputs.has('down') && player.state === playerStates.CROUCHING) {
       player.state = playerStates.IDLE
@@ -67,6 +77,6 @@ function updatePlayer(player, inputs) {
 }
 
 export function updateState(state, player1Inputs, player2Inputs) {
-  updatePlayer(state.player1, player1Inputs)
-  updatePlayer(state.player2, player2Inputs)
+  updatePlayer(state.player1, state.player2, player1Inputs)
+  updatePlayer(state.player2, state.player1, player2Inputs)
 }

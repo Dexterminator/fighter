@@ -7,7 +7,7 @@ export const PLAYER_STANDING_HEIGHT = 250
 export const PLAYER_CROUCHING_HEIGHT = 150
 export const PLAYER_STARTING_Y = 500
 export const PLAYER_CROUCHING_Y = PLAYER_STARTING_Y + (PLAYER_STANDING_HEIGHT - PLAYER_CROUCHING_HEIGHT) * 0.5
-const HAND_WIDTH = 20
+const HAND_WIDTH = 40
 const PLAYER_WIDTH = 80
 
 export const orientations = {
@@ -20,7 +20,8 @@ export const playerStates = {
   WALKING: 1,
   CROUCHING: 2,
   PUNCHING: 3,
-  BLOCKING: 4
+  BLOCKING: 4,
+  HITSTUN: 5
 }
 
 export const animationStates = {

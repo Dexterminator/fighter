@@ -34,7 +34,7 @@ import {render, update, mainConstants, addDebug, initCanvas, initPeer, networkSe
   }
 
   main()
-  // addDebug(state, debugConfig)
+  addDebug(state, debugConfig)
 })()
 
 if (module.hot) {
