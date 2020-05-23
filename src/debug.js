@@ -24,13 +24,14 @@ function testScenario(initialState, player1InputsByFrame, player2InputsByFrame, 
   const h1 = addTitle()
   const canvas = initCanvas()
   const ctx = canvas.getContext("2d")
+  initialState = JSON.stringify(initialState)
   let state = JSON.parse(initialState)
 
   let frames = 0
 
   function main() {
     let stopMain = window.requestAnimationFrame(main)
-    h1.innerHTML = title + ', progress: ' + Math.round(frames/frameDuration * 100) + '%'
+    h1.innerHTML = title + ', progress: ' + Math.round(frames / frameDuration * 100) + '%'
     update(state, player1InputsByFrame[frames], player2InputsByFrame[frames])
     render(state, ctx, canvas)
     frames++
@@ -47,17 +48,23 @@ export function test1() {
   const frameDuration = 50
   const player1InputsByFrame = {}
   const player2InputsByFrame = {}
-  for (let i = 0; i < frameDuration; i++) {
-    player1InputsByFrame[i] = new Set(['right'])
-    player2InputsByFrame[i] = new Set(['left'])
+  for (let i = 0; i < frameDuration / 2; i++) {
+    player1InputsByFrame[i] = new Set(['down'])
+    // player2InputsByFrame[i] = new Set(['left'])
   }
-  testScenario(mainConstants.initialState, player1InputsByFrame, player2InputsByFrame, frameDuration, 'Test 1')
+  const state = JSON.parse(mainConstants.initialState)
+  state.player2.x = 400
+  testScenario(state, player1InputsByFrame, player2InputsByFrame, frameDuration, 'Test 1')
 }
 
 export function test2() {
-  const frameDuration = 60
-  const inputsByFrame = {0: new Set(['a'])}
-  testScenario(mainConstants.initialState, inputsByFrame, {}, frameDuration, 'Test 2')
+  const frameDuration = 120
+  const inputsByFrame = {
+    0: new Set(['a']),
+    60: new Set(['down', 'a'])
+  }
+  const state = JSON.parse(mainConstants.initialState)
+  testScenario(state, inputsByFrame, {}, frameDuration, 'Test 2')
 }
 
 if (module.hot) {

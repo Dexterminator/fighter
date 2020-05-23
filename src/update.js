@@ -1,4 +1,12 @@
-import {animations, animationStates, nextAnimationState, orientations, playerStates, READY_STATES} from "./constants"
+import {
+  animations,
+  animationStates,
+  nextAnimationState,
+  orientations,
+  PLAYER_CROUCHING_HEIGHT, PLAYER_CROUCHING_Y, PLAYER_STANDING_HEIGHT, PLAYER_STARTING_Y,
+  playerStates,
+  READY_STATES, STANDING_STATES
+} from "./constants"
 import {easeInOutCubic, getTopY} from "./math"
 
 function updateHand(player) {
@@ -25,13 +33,28 @@ function updateHand(player) {
 
 function updatePlayer(player, inputs) {
   if (READY_STATES.has(player.state)) {
-    if (inputs.has("a")) {
+    if (!inputs.has('down') && player.state === playerStates.CROUCHING) {
+      player.state = playerStates.IDLE
+    }
+
+    if (inputs.has('down')) {
+      player.state = playerStates.CROUCHING
+      player.height = PLAYER_CROUCHING_HEIGHT
+      player.y = PLAYER_CROUCHING_Y
+    } else {
+      player.height = PLAYER_STANDING_HEIGHT
+      player.y = PLAYER_STARTING_Y
+    }
+
+    if (inputs.has('a')) {
       player.state = playerStates.PUNCHING
       player.animation.state = animationStates.WINDUP
-    } else if (inputs.has("left")) {
-      player.x -= 10
-    } else if (inputs.has("right")) {
-      player.x += 10
+    } else if (STANDING_STATES.has(player.state)) {
+      if (inputs.has('left')) {
+        player.x -= 10
+      } else if (inputs.has('right')) {
+        player.x += 10
+      }
     }
   }
   updateHand(player)

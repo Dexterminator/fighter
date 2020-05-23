@@ -3,10 +3,12 @@ export const PLAYER_1_COLOR = 'lightblue'
 export const PLAYER_2_COLOR = 'darkcyan'
 export const GAME_WIDTH = 1280
 export const GAME_HEIGHT = 720
-const PLAYER_STARTING_Y = 500
-const HAND_WIDTH = 25
+export const PLAYER_STANDING_HEIGHT = 250
+export const PLAYER_CROUCHING_HEIGHT = 150
+export const PLAYER_STARTING_Y = 500
+export const PLAYER_CROUCHING_Y = PLAYER_STARTING_Y + (PLAYER_STANDING_HEIGHT - PLAYER_CROUCHING_HEIGHT) * 0.5
+const HAND_WIDTH = 20
 const PLAYER_WIDTH = 80
-const PLAYER_HEIGHT = 250
 
 export const orientations = {
   FACING_RIGHT: 1,
@@ -16,7 +18,9 @@ export const orientations = {
 export const playerStates = {
   IDLE: 0,
   WALKING: 1,
-  PUNCHING: 2
+  CROUCHING: 2,
+  PUNCHING: 3,
+  BLOCKING: 4
 }
 
 export const animationStates = {
@@ -33,7 +37,8 @@ export const nextAnimationState = {
   [animationStates.RECOVERY]: null
 }
 
-export const READY_STATES = new Set([playerStates.IDLE, playerStates.WALKING])
+export const READY_STATES = new Set([playerStates.IDLE, playerStates.WALKING, playerStates.CROUCHING])
+export const STANDING_STATES = new Set([playerStates.IDLE, playerStates.WALKING])
 
 const PUNCH_RANGE = PLAYER_WIDTH * 2
 export const animations = {
@@ -64,7 +69,7 @@ export const animations = {
 const playerState = {
   state: playerStates.IDLE,
   width: PLAYER_WIDTH,
-  height: PLAYER_HEIGHT,
+  height: PLAYER_STANDING_HEIGHT,
   y: PLAYER_STARTING_Y,
   animation: {
     state: null,
