@@ -1,7 +1,7 @@
 import "./styles.css"
 import {render, update} from "./main"
 import {initCanvas} from "./dom"
-import {FRAME_DELAY, initialState} from "./constants"
+import {FRAME_DELAY, initialState, inputsByKey} from "./constants"
 import {addDebug, test1, test2} from "./debug"
 import {initPeer, networkSendInputs} from "./network"
 
@@ -17,18 +17,19 @@ import {initPeer, networkSendInputs} from "./network"
 
   const currentInputs = new Set()
   window.addEventListener('keydown', function (e) {
-    currentInputs.add(e.code)
+    currentInputs.add(inputsByKey[e.code])
   })
   window.addEventListener('keyup', function (e) {
-    currentInputs.delete(e.code)
+    currentInputs.delete(inputsByKey[e.code])
   })
 
   function main() {
     let stopMain = window.requestAnimationFrame(main)
     inputsByFrame[frames + FRAME_DELAY] = new Set(currentInputs)
     networkSendInputs(inputsByFrame)
-    const inputs = inputsByFrame[frames] || new Set()
-    update(state, inputs)
+    const player1Inputs = inputsByFrame[frames] || new Set()
+    const player2Inputs = new Set()
+    update(state, player1Inputs, player2Inputs)
     statesByFrame[frames] = JSON.stringify(state)
     render(state, ctx, canvas)
     frames++

@@ -1,4 +1,5 @@
-import {GAME_HEIGHT, GAME_WIDTH} from "./main"
+
+import {GAME_HEIGHT, GAME_WIDTH} from "./constants"
 
 export function initCanvas() {
   const canvas = document.createElement("canvas")

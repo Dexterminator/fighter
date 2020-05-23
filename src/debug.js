@@ -19,7 +19,7 @@ export function addDebug(state, debug) {
   button3.onclick = () => Object.assign(state, JSON.parse(debug.savedState))
 }
 
-function testScenario(initialState, inputsByFrame, frameDuration, title) {
+function testScenario(initialState, player1InputsByFrame, player2InputsByFrame, frameDuration, title) {
   addTitle(title)
   const canvas = initCanvas()
   const ctx = canvas.getContext("2d")
@@ -29,7 +29,7 @@ function testScenario(initialState, inputsByFrame, frameDuration, title) {
 
   function main() {
     let stopMain = window.requestAnimationFrame(main)
-    update(state, inputsByFrame[frames])
+    update(state, player1InputsByFrame[frames], player2InputsByFrame[frames])
     render(state, ctx, canvas)
     frames++
     if (frames % frameDuration === 0) {
@@ -42,19 +42,21 @@ function testScenario(initialState, inputsByFrame, frameDuration, title) {
 }
 
 export function test1() {
-  const frameDuration = 60
-  const inputsByFrame = {}
+  const frameDuration = 50
+  const player1InputsByFrame = {}
+  const player2InputsByFrame = {}
   for (let i = 0; i < frameDuration; i++) {
-    inputsByFrame[i] = new Set(["KeyD"])
+    player1InputsByFrame[i] = new Set(["right"])
+    player2InputsByFrame[i] = new Set(["left"])
   }
-  testScenario(initialState, inputsByFrame, frameDuration, 'Test 1')
+  testScenario(initialState, player1InputsByFrame, player2InputsByFrame, frameDuration, 'Test 1')
 }
 
 export function test2() {
   const frameDuration = 120
   const inputsByFrame = {}
   for (let i = 0; i < frameDuration; i++) {
-    inputsByFrame[i] = new Set(["KeyD"])
+    inputsByFrame[i] = new Set(["right"])
   }
-  testScenario(initialState, inputsByFrame, frameDuration, 'Test 2')
+  testScenario(initialState, inputsByFrame, {}, frameDuration, 'Test 2')
 }
