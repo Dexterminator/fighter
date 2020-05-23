@@ -29,7 +29,3 @@ export function update(state, inputs = new Set()) {
   //   state.progress += 1 / framesDuration
   // }
 }
-
-function testScenario() {
-
-}
