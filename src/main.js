@@ -1,38 +1,39 @@
-
-
-export function clear(ctx, canvas) {
-  ctx.clearRect(0, 0, canvas.width, canvas.height)
-}
-
-function renderPlayer(ctx, playerState) {
-  ctx.fillRect(playerState.x, playerState.y, playerState.width, playerState.height)
-}
+import {renderState} from "./render"
+import {updateState} from "./update"
+import {FRAME_DELAY, initialState, inputsByKey} from "./constants"
+import * as debug from "./debug"
+import * as dom from "./dom"
+import * as network from "./network"
 
 export function render(state, ctx, canvas) {
-  clear(ctx, canvas)
-  ctx.fillStyle = 'lightblue'
-  renderPlayer(ctx, state.player1)
-  ctx.fillStyle = 'darkcyan'
-  renderPlayer(ctx, state.player2)
-}
-
-export function easeInOutCubic(x) {
-  return x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2
-}
-
-function updatePlayer(player, inputs) {
-  if (inputs.has("left")) {
-    player.x -= 10
-  } else if (inputs.has("right")) {
-    player.x += 10
-  }
+  ctx.clearRect(0, 0, canvas.width, canvas.height)
+  renderState(ctx, state)
 }
 
 export function update(state, player1Inputs = new Set(), player2Inputs = new Set()) {
-  updatePlayer(state.player1, player1Inputs)
-  updatePlayer(state.player2, player2Inputs)
-  // if (state.progress < 1) {
-  //   state.x = easeInOutCubic(state.progress) * GAME_WIDTH / 3
-  //   state.progress += 1 / framesDuration
-  // }
+  updateState(state, player1Inputs, player2Inputs)
+}
+
+export const mainConstants = {
+  FRAME_DELAY: FRAME_DELAY,
+  initialState: initialState,
+  inputsByKey: inputsByKey
+}
+
+export function addDebug(state, debugConfig) {
+  debug.addDebug(state, debugConfig)
+  debug.test1()
+  debug.test2()
+}
+
+export function initCanvas() {
+  return dom.initCanvas()
+}
+
+export function initPeer() {
+  network.initPeer()
+}
+
+export function networkSendInputs(inputsByFrame) {
+  network.networkSendInputs(inputsByFrame)
 }

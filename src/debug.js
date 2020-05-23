@@ -1,12 +1,15 @@
-import {initialState} from "./constants"
 import {addTitle, initCanvas} from "./dom"
 import {render, update} from "./main"
+import {initialState} from "./constants"
 
 export function addDebug(state, debug) {
   const button = document.createElement("button")
   document.body.append(button)
   button.innerHTML = 'Log state'
-  button.onclick = () => console.log(JSON.stringify(state))
+  button.onclick = () => {
+    console.log(state)
+    console.log(JSON.stringify(state))
+  }
 
   const button2 = document.createElement("button")
   document.body.append(button2)
@@ -59,4 +62,10 @@ export function test2() {
     inputsByFrame[i] = new Set(["right"])
   }
   testScenario(initialState, inputsByFrame, {}, frameDuration, 'Test 2')
+}
+
+if (module.hot) {
+  module.hot.accept('./main.js', function () {
+    console.log('Accepting the updated main module!')
+  })
 }

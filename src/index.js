@@ -1,31 +1,27 @@
 import "./styles.css"
-import {render, update} from "./main"
-import {initCanvas} from "./dom"
-import {FRAME_DELAY, initialState, inputsByKey} from "./constants"
-import {addDebug, test1, test2} from "./debug"
-import {initPeer, networkSendInputs} from "./network"
+import {render, update, mainConstants, addDebug, initCanvas, initPeer, networkSendInputs} from "./main"
 
 (function () {
   const canvas = initCanvas()
   const ctx = canvas.getContext("2d")
-  const state = JSON.parse(initialState)
+  const state = JSON.parse(mainConstants.initialState)
   let frames = 0
   initPeer()
   const inputsByFrame = {}
   const statesByFrame = {}
-  const debug = {savedState: initialState}
+  const debugConfig = {savedState: mainConstants.initialState}
 
   const currentInputs = new Set()
   window.addEventListener('keydown', function (e) {
-    currentInputs.add(inputsByKey[e.code])
+    currentInputs.add(mainConstants.inputsByKey[e.code])
   })
   window.addEventListener('keyup', function (e) {
-    currentInputs.delete(inputsByKey[e.code])
+    currentInputs.delete(mainConstants.inputsByKey[e.code])
   })
 
   function main() {
     let stopMain = window.requestAnimationFrame(main)
-    inputsByFrame[frames + FRAME_DELAY] = new Set(currentInputs)
+    inputsByFrame[frames + mainConstants.FRAME_DELAY] = new Set(currentInputs)
     networkSendInputs(inputsByFrame)
     const player1Inputs = inputsByFrame[frames] || new Set()
     const player2Inputs = new Set()
@@ -38,9 +34,7 @@ import {initPeer, networkSendInputs} from "./network"
   }
 
   main()
-  addDebug(state, debug)
-  test1()
-  test2()
+  addDebug(state, debugConfig)
 })()
 
 if (module.hot) {
