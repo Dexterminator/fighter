@@ -52,6 +52,8 @@ function handleHit(player, otherPlayer) {
         player.stun = 25
         player.animation.state = null
         player.animation.stateProgress = 0
+      } else {
+        player.hp -= 1
       }
     }
   }
