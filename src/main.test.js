@@ -27,13 +27,13 @@ test('collision checks', () => {
 
 test('remote input parsing', () => {
   const remoteInput = {
-    0: new Set(['right', 'a']),
+    0: new Set(['right', 'attack']),
     1: new Set(),
     2: new Set(['left'])
   }
   const encodedInput = encodeInput(remoteInput)
 
-  expect(encodedInput).toBe("{\"0\":[\"right\",\"a\"],\"1\":[],\"2\":[\"left\"]}")
+  expect(encodedInput).toBe("{\"0\":[\"right\",\"attack\"],\"1\":[],\"2\":[\"left\"]}")
   expect(parseRemoteInput(encodedInput)).toStrictEqual(remoteInput)
 })
 
@@ -68,7 +68,6 @@ test('Opponent input first arrives on frame 3, same as current frame', () => {
   }
 
   const remoteInput = encodeInput(input)
-
   const [newLatestSyncedFrame, newInputsByFrame, newState] = resolveNetworking(getOwnInputsByFrame(currentFrame), remoteInput, getStatesByFrame(currentFrame), -1, currentFrame)
   expect(newLatestSyncedFrame).toBe(3)
   expect(newInputsByFrame).toStrictEqual(input)
@@ -88,6 +87,7 @@ test('Opponent input first arrives on frame 3, and current frame is 5', () => {
     2: new Set(['right']),
     3: new Set(['down']),
   }
+
   const remoteInput = encodeInput(input)
 
   const expectedPredictedInput = {}
@@ -141,7 +141,7 @@ test('Advanced networking scenario', () => {
     1: new Set(['left']),
     2: new Set(['right']),
     3: new Set(['down']),
-    4: new Set(['a']),
+    4: new Set(['attack']),
   }
 
   const remoteInput2 = encodeInput(input2)
@@ -149,8 +149,8 @@ test('Advanced networking scenario', () => {
   const expectedPredictedInput = {}
   Object.assign(expectedPredictedInput, input2)
   Object.assign(expectedPredictedInput, {
-    5: new Set(['a']),
-    6: new Set(['a'])
+    5: new Set(['attack']),
+    6: new Set(['attack'])
   })
 
   let [newLatestSyncedFrame2, newInputsByFrame2, newState2] = resolveNetworking(
@@ -167,8 +167,8 @@ test('Advanced networking scenario', () => {
     ['left'],
     ['right'],
     ['down'],
-    ['a'], // Latest received
-    ['a'], // Predicted
+    ['attack'], // Latest received
+    ['attack'], // Predicted
   ])
   expect(newState2.player2.state).toBe(playerStates.PUNCHING)
 })

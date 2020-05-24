@@ -11,6 +11,7 @@ export function encodeInput(input) {
 }
 
 export function resolveNetworking(inputsByFrame, remoteInputsByFrame, statesByFrame, latestSyncedFrame, currentFrame) {
+  remoteInputsByFrame = remoteInputsByFrame || JSON.stringify({})
   remoteInputsByFrame = parseRemoteInput(remoteInputsByFrame)
   remoteInputsByFrame[-1] = new Set()
   let newLatestSyncedFrame = latestSyncedFrame

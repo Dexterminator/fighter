@@ -90,7 +90,7 @@ function updatePlayer(player, otherPlayer, inputs) {
       player.y = PLAYER_STARTING_Y
     }
 
-    if (inputs.has('a')) {
+    if (inputs.has('attack')) {
       if (CROUCHING_STATES.has(player.state)) {
         player.hand.attackProperty = attackProperties.LOW
       } else {

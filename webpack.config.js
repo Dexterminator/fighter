@@ -47,6 +47,7 @@ const config = {
   },
   plugins: [
     new HtmlWebpackPlugin({
+      title: 'FIGHT',
       appMountId: 'app',
       filename: 'index.html'
     })

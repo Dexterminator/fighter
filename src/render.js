@@ -11,6 +11,7 @@ import {
 import {getLeftX, getTopY} from "./math"
 
 const colorByAnimationState = {
+  [animationStates.WINDUP]: '#00dc07',
   [animationStates.ACTIVE]: '#dc4776',
 }
 

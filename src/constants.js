@@ -130,7 +130,7 @@ export const inputsByKey = {
   KeyA: 'left',
   KeyD: 'right',
   KeyS: 'down',
-  KeyC: 'a',
+  KeyC: 'attack',
   KeyV: 'block'
 }
 
@@ -138,6 +138,6 @@ export const inputsByKey2 = {
   ArrowLeft: 'left',
   ArrowRight: 'right',
   ArrowDown: 'down',
-  Enter: 'a',
+  Enter: 'attack',
   ShiftRight: 'block'
 }
