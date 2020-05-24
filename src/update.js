@@ -16,7 +16,7 @@ import {
 } from "./constants"
 import {easeInOutCubic, getTopY, isOverlapping} from "./math"
 
-function updateHand(player) {
+export function updateHand(player) {
   const offset = BLOCKING_STATES.has(player.state) ? 0.5 : 0.8
   const hand = player.hand
   const number = player.orientation === orientations.FACING_RIGHT ? 1 : -1
@@ -39,6 +39,7 @@ function updateHand(player) {
     }
   }
   hand.y = getTopY(player) + hand.height * 1.8
+  return player
 }
 
 function handleHit(player, otherPlayer) {
@@ -120,10 +121,11 @@ function updatePlayer(player, otherPlayer, inputs) {
 }
 
 export function updateState(state, player1Inputs, player2Inputs) {
-  state.inputs = {
-    player1: player1Inputs,
-    player2: player2Inputs
+  if (document.location.href === 'http://localhost/') {
+    state.player1Inputs.push(Array.from(player1Inputs))
+    state.player2Inputs.push(Array.from(player2Inputs))
   }
+
   updatePlayer(state.player1, state.player2, player1Inputs)
   updatePlayer(state.player2, state.player1, player2Inputs)
 }

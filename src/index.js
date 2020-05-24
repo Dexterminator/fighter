@@ -10,6 +10,10 @@ import {render, update, mainConstants, addDebug, initCanvas, initPeer, networkSe
   const inputsByFrame = {}
   const statesByFrame = {}
   const debugConfig = {savedState: mainConstants.initialState}
+  const remoteStatesByFrame = {}
+  for (let i = 0; i < mainConstants.FRAME_DELAY; i++) {
+    inputsByFrame[i] = new Set()
+  }
 
   const currentInputs = new Set()
   const player2Inputs = new Set()

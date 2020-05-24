@@ -10,6 +10,7 @@ export function render(state, ctx, canvas) {
   renderState(ctx, state)
 }
 
+// TODO: Don't allow inputs to be undefined
 export function update(state, player1Inputs = new Set(), player2Inputs = new Set()) {
   updateState(state, player1Inputs, player2Inputs)
 }

@@ -1,22 +1,36 @@
 import Peer from "peerjs"
 import {MAX_PREDICTION_WINDOW} from "./constants"
+import {update} from "./main"
 
 export function parseRemoteInput(remoteInput) {
-  return JSON.parse(remoteInput, (key, value) => value instanceof Array ? new Set(value): value)
+  return JSON.parse(remoteInput, (key, value) => value instanceof Array ? new Set(value) : value)
 }
 
 export function encodeInput(input) {
   return JSON.stringify(input, (key, value) => value instanceof Set ? [...value] : value)
 }
 
-export function resolveNetworking(simulatedFrames, remoteInputByFrame, statesByFrame, currentFrame) {
-  remoteInputByFrame = parseRemoteInput(remoteInputByFrame)
-  const simulated = new Set()
-  for (let i = Math.min(0, currentFrame - MAX_PREDICTION_WINDOW); i < currentFrame; i++) {
-    if (!remoteInputByFrame.hasOwnProperty(i)) {
-      simulated.add(i)
+export function resolveNetworking(inputsByFrame, remoteInputsByFrame, statesByFrame, latestSyncedFrame, currentFrame) {
+  remoteInputsByFrame = parseRemoteInput(remoteInputsByFrame)
+  remoteInputsByFrame[-1] = new Set()
+  let newLatestSyncedFrame = latestSyncedFrame
+  for (let i = latestSyncedFrame + 1; i <= currentFrame; i++) {
+    if (remoteInputsByFrame.hasOwnProperty(i)) {
+      newLatestSyncedFrame = i
+    } else {
+      // Assume input was the same as the frame before
+      remoteInputsByFrame[i] = remoteInputsByFrame[i - 1]
     }
   }
+
+  const state = JSON.parse(statesByFrame[latestSyncedFrame])
+  for (let i = latestSyncedFrame + 1; i < currentFrame; i++) {
+    update(state, inputsByFrame[i], remoteInputsByFrame[i])
+    statesByFrame[i] = JSON.stringify(state)
+  }
+
+  delete remoteInputsByFrame[-1]
+  return [newLatestSyncedFrame, remoteInputsByFrame, state]
 }
 
 export function networkSendInputs(inputsByFrame) {

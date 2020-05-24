@@ -1,3 +1,5 @@
+import {updateHand} from "./update"
+
 export const FRAME_DELAY = 3
 export const PLAYER_1_COLOR = 'lightblue'
 export const PLAYER_2_COLOR = 'darkcyan'
@@ -79,6 +81,19 @@ export const animations = Object.freeze({
   }
 })
 
+function addHand(player) {
+  const hand = {
+    x: 0,
+    y: 0,
+    width: HAND_WIDTH,
+    height: HAND_WIDTH,
+    attackProperty: attackProperties.HIGH
+  }
+  player.hand = hand
+  updateHand(player)
+  return player
+}
+
 const playerState = {
   state: playerStates.IDLE,
   width: PLAYER_WIDTH,
@@ -89,27 +104,26 @@ const playerState = {
   animation: {
     state: null,
     stateProgress: 0
-  },
-  hand: {
-    x: 0,
-    y: 0,
-    width: HAND_WIDTH,
-    height: HAND_WIDTH,
-    attackProperty: attackProperties.LOW
   }
 }
 
+const initialPlayer1State = Object.assign({
+  id: 'player1',
+  x: PLAYER_WIDTH * 2,
+  orientation: orientations.FACING_RIGHT
+}, playerState)
+
+const initialPlayer2State = Object.assign({
+  id: 'player2',
+  x: GAME_WIDTH - PLAYER_WIDTH * 2,
+  orientation: orientations.FACING_LEFT
+}, playerState)
+
 export const initialState = JSON.stringify({
-  player1: Object.assign({
-    id: 'player1',
-    x: PLAYER_WIDTH * 2,
-    orientation: orientations.FACING_RIGHT
-  }, playerState),
-  player2: Object.assign({
-    id: 'player2',
-    x: GAME_WIDTH - PLAYER_WIDTH * 2,
-    orientation: orientations.FACING_LEFT
-  }, playerState),
+  player1Inputs: [],
+  player2Inputs: [],
+  player1: addHand(initialPlayer1State),
+  player2: addHand(initialPlayer2State),
 })
 
 export const inputsByKey = {
