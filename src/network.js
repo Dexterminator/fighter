@@ -1,5 +1,9 @@
 import Peer from "peerjs"
 
+export function getRemoteInputs() {
+
+}
+
 export function networkSendInputs(inputsByFrame) {
 
 }

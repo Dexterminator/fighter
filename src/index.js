@@ -36,7 +36,9 @@ import {render, update, mainConstants, addDebug, initCanvas, initPeer, networkSe
   }
 
   main()
-  addDebug(state, debugConfig)
+  if (document.location.href.includes('localhost')) {
+    addDebug(state, debugConfig)
+  }
 })()
 
 if (module.hot) {

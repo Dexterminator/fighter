@@ -110,7 +110,7 @@ function updatePlayer(player, otherPlayer, inputs) {
     }
   }
 
-  if (isOverlapping(player, otherPlayer.hand) || player.x < player.width * 0.7 || player.x > GAME_WIDTH - player.width * 0.7) {
+  if (isOverlapping(player, otherPlayer) || player.x < player.width * 0.7 || player.x > GAME_WIDTH - player.width * 0.7) {
     player.x = prevX
   }
 
