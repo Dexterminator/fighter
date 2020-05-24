@@ -64,7 +64,7 @@ function networkTestScenario(initialState, player1InputsByFrame, remoteInputsByF
 
   function executeFrame() {
     main()
-    setTimeout(executeFrame, 2000)
+    setTimeout(executeFrame, 500)
   }
 
   executeFrame()

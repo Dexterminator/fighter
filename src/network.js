@@ -1,4 +1,4 @@
-import Peer from "peerjs"
+import SimplePeer from "simple-peer"
 import {MAX_PREDICTION_WINDOW} from "./constants"
 import {update} from "./main"
 
@@ -38,32 +38,108 @@ export function networkSendInputs(inputsByFrame) {
   const json = encodeInput(inputsByFrame)
 }
 
-export function initPeer() {
-  const peer = new Peer()
-  peer.on('open', id => {
-    let remotePeerId = document.location.href.substring(document.location.href.lastIndexOf('/') + 1)
-    if (remotePeerId !== '') {
-      console.log('attempting to connect to ' + remotePeerId)
-      const conn = peer.connect(remotePeerId)
-      conn.on('open', () => {
-        conn.send('hi from ' + id)
-        console.log('sent message to ' + remotePeerId)
-      })
-    } else {
-      const div = document.createElement('div')
-      div.innerHTML = 'Connect url: ' + document.location.href + '/#/' + id
-      document.body.append(div)
+export function initHostPeer() {
+  const p = new SimplePeer({
+    initiator: true,
+    trickle: false
+  })
+  p.on('error', err => console.log('error', err))
+
+  p.on('signal', data => {
+    console.log('SIGNAL', JSON.stringify(data))
+    const div = document.createElement('div')
+    const div2 = document.createElement('div')
+    div.textContent = "Paste the below in the guest's form!"
+    div2.textContent = JSON.stringify(data)
+    div2.style = 'color: teal'
+    document.body.append(div)
+    document.body.append(div2)
+
+    const div3 = document.createElement('div')
+    div3.textContent = "Paste the guest's response here."
+
+    document.body.append(document.createElement('br'))
+    document.body.append(div3)
+    const textArea = document.createElement('textarea')
+    document.body.append(textArea)
+    const button = document.createElement("button")
+    button.textContent = 'Start game!'
+    button.onclick = () => {
+      p.signal(JSON.parse(textArea.value))
     }
+    document.body.append(button)
   })
 
-  peer.on('connection', (conn) => {
-    conn.on('data', (data) => {
-      console.log(data)
-    })
+  p.on('connect', () => {
+    console.log('CONNECTED TO GUEST')
+    p.send('whatever' + Math.random())
+  })
 
-    conn.on('open', () => {
-      console.log('Connection established!')
-      conn.send('hello!')
-    })
+  p.on('data', data => {
+    console.log('data: ' + data)
+  })
+}
+
+export function initGuestPeer() {
+  const p = new SimplePeer({
+    trickle: false
+  })
+  p.on('error', err => console.log('error', err))
+
+  const div = document.createElement('div')
+  div.textContent = "Paste the weird scary text from the host here."
+  document.body.append(div)
+  const textArea = document.createElement('textarea')
+  document.body.append(textArea)
+  const button = document.createElement("button")
+  button.textContent = 'Get response'
+  button.onclick = () => {
+    p.signal(JSON.parse(textArea.value))
+  }
+  document.body.append(button)
+
+  p.on('signal', data => {
+    console.log('SIGNAL', JSON.stringify(data))
+    const div = document.createElement('div')
+    const div2 = document.createElement('div')
+    div.textContent = "Paste this in the host's form!"
+    div2.textContent = JSON.stringify(data)
+    div2.style = 'color: teal'
+    document.body.append(div)
+    document.body.append(document.createElement('br'))
+    document.body.append(div2)
+  })
+
+  p.on('connect', () => {
+    console.log('CONNECTED TO HOST')
+    p.send('whatever' + Math.random())
+  })
+
+  p.on('data', data => {
+    console.log('data: ' + data)
+  })
+}
+
+export function testPeer() {
+  const p = new SimplePeer({
+    initiator: location.hash === '#host',
+    trickle: false
+  })
+
+  const textArea = document.createElement('textarea')
+  document.body.append(textArea)
+
+  document.querySelector('form').addEventListener('submit', ev => {
+    ev.preventDefault()
+    p.signal(JSON.parse(document.querySelector('#incoming').value))
+  })
+
+  p.on('connect', () => {
+    console.log('CONNECT')
+    p.send('whatever' + Math.random())
+  })
+
+  p.on('data', data => {
+    console.log('data: ' + data)
   })
 }

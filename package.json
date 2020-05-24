@@ -14,7 +14,7 @@
     "test": "jest"
   },
   "dependencies": {
-    "peerjs": "^1.2.0"
+    "simple-peer": "^9.7.2"
   },
   "devDependencies": {
     "@babel/core": "^7.9.6",

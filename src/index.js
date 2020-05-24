@@ -1,12 +1,12 @@
 import "./styles.css"
-import {render, update, mainConstants, addDebug, initCanvas, initPeer, networkSendInputs} from "./main"
+import {initCanvas, mainConstants, networkSendInputs, render, update} from "./main"
+import {initGuestPeer, initHostPeer, testPeer} from "./network"
 
 (function () {
   const canvas = initCanvas()
   const ctx = canvas.getContext("2d")
-  const state = JSON.parse(mainConstants.initialState)
+  let state = JSON.parse(mainConstants.initialState)
   let frames = 0
-  // initPeer()
   const inputsByFrame = {}
   const statesByFrame = {}
   const debugConfig = {savedState: mainConstants.initialState}
@@ -20,6 +20,9 @@ import {render, update, mainConstants, addDebug, initCanvas, initPeer, networkSe
   window.addEventListener('keydown', function (e) {
     currentInputs.add(mainConstants.inputsByKey[e.code])
     player2Inputs.add(mainConstants.inputsByKey2[e.code])
+    if (e.code === 'Space') {
+      // initPeer()
+    }
   })
   window.addEventListener('keyup', function (e) {
     currentInputs.delete(mainConstants.inputsByKey[e.code])
@@ -37,11 +40,26 @@ import {render, update, mainConstants, addDebug, initCanvas, initPeer, networkSe
     frames++
     delete inputsByFrame[frames - 10]
     delete statesByFrame[frames - 10]
+    if (state.player1.hp <= 0 || state.player2.hp <= 0) {
+      frames = 0
+      state = JSON.parse(mainConstants.initialState)
+      // remoteInput = JSON.stringify({})
+      // networkState = {latestSyncedFrame: -1}
+    }
   }
 
   main()
+
+  if (location.hash === '#host') {
+    initHostPeer()
+  } else if (location.hash === '#guest') {
+    initGuestPeer()
+  } else {
+
+  }
+
   if (document.location.href.includes('localhost')) {
-    addDebug(state, debugConfig)
+    // addDebug(state, debugConfig)
   }
 })()
 
