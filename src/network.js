@@ -1,11 +1,26 @@
 import Peer from "peerjs"
+import {MAX_PREDICTION_WINDOW} from "./constants"
 
-export function getRemoteInputs() {
+export function parseRemoteInput(remoteInput) {
+  return JSON.parse(remoteInput, (key, value) => value instanceof Array ? new Set(value): value)
+}
 
+export function encodeInput(input) {
+  return JSON.stringify(input, (key, value) => value instanceof Set ? [...value] : value)
+}
+
+export function resolveNetworking(simulatedFrames, remoteInputByFrame, statesByFrame, currentFrame) {
+  remoteInputByFrame = parseRemoteInput(remoteInputByFrame)
+  const simulated = new Set()
+  for (let i = Math.min(0, currentFrame - MAX_PREDICTION_WINDOW); i < currentFrame; i++) {
+    if (!remoteInputByFrame.hasOwnProperty(i)) {
+      simulated.add(i)
+    }
+  }
 }
 
 export function networkSendInputs(inputsByFrame) {
-
+  const json = encodeInput(inputsByFrame)
 }
 
 export function initPeer() {

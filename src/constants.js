@@ -9,6 +9,7 @@ export const PLAYER_STARTING_Y = 500
 export const PLAYER_CROUCHING_Y = PLAYER_STARTING_Y + (PLAYER_STANDING_HEIGHT - PLAYER_CROUCHING_HEIGHT) * 0.5
 export const STARTING_HP = 100
 export const LIFE_BAR_WIDTH = 300
+export const MAX_PREDICTION_WINDOW = 8
 const HAND_WIDTH = 40
 const PLAYER_WIDTH = 80
 
@@ -24,7 +25,8 @@ export const playerStates = {
   PUNCHING: 3,
   BLOCKING: 4,
   CROUCH_BLOCKING: 5,
-  HITSTUN: 6
+  HITSTUN: 6,
+  BLOCKSTUN: 7
 }
 
 export const animationStates = {
@@ -49,7 +51,7 @@ export const nextAnimationState = {
 export const READY_STATES = new Set([playerStates.IDLE, playerStates.WALKING, playerStates.CROUCHING, playerStates.BLOCKING, playerStates.CROUCH_BLOCKING])
 export const STANDING_STATES = new Set([playerStates.IDLE, playerStates.WALKING])
 export const CROUCHING_STATES = new Set([playerStates.CROUCHING, playerStates.CROUCH_BLOCKING])
-export const BLOCKING_STATES = new Set([playerStates.BLOCKING, playerStates.CROUCH_BLOCKING])
+export const BLOCKING_STATES = new Set([playerStates.BLOCKING, playerStates.CROUCH_BLOCKING, playerStates.BLOCKSTUN])
 
 const PUNCH_RANGE = PLAYER_WIDTH * 1.5
 export const animations = Object.freeze({

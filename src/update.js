@@ -43,7 +43,7 @@ function updateHand(player) {
 
 function handleHit(player, otherPlayer) {
   if (otherPlayer.animation && otherPlayer.animation.state === animationStates.ACTIVE) {
-    if (isOverlapping(player, otherPlayer.hand) && player.state !== playerStates.HITSTUN) {
+    if (isOverlapping(player, otherPlayer.hand) && player.state !== playerStates.HITSTUN && player.state !== playerStates.BLOCKSTUN) {
       const blockedHighAttack = otherPlayer.hand.attackProperty === attackProperties.HIGH && player.state === playerStates.BLOCKING
       const blockedLowAttack = otherPlayer.hand.attackProperty === attackProperties.LOW && player.state === playerStates.CROUCH_BLOCKING
       if (!blockedHighAttack && !blockedLowAttack) {
@@ -53,7 +53,9 @@ function handleHit(player, otherPlayer) {
         player.animation.state = null
         player.animation.stateProgress = 0
       } else {
-        player.hp -= 1
+        player.state = playerStates.BLOCKSTUN
+        player.hp -= 3
+        player.stun = 10
       }
     }
   }
@@ -61,7 +63,7 @@ function handleHit(player, otherPlayer) {
 
 function updatePlayer(player, otherPlayer, inputs) {
   const prevX = player.x
-  if (player.state === playerStates.HITSTUN) {
+  if (player.state === playerStates.HITSTUN || player.state === playerStates.BLOCKSTUN) {
     player.stun--
     if (player.stun === 0) {
       player.state = playerStates.IDLE
@@ -118,6 +120,10 @@ function updatePlayer(player, otherPlayer, inputs) {
 }
 
 export function updateState(state, player1Inputs, player2Inputs) {
+  state.inputs = {
+    player1: player1Inputs,
+    player2: player2Inputs
+  }
   updatePlayer(state.player1, state.player2, player1Inputs)
   updatePlayer(state.player2, state.player1, player2Inputs)
 }
