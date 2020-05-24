@@ -45,13 +45,21 @@ function testScenario(initialState, player1InputsByFrame, player2InputsByFrame, 
 }
 
 export function test1() {
-  const frameDuration = 50
+  const frameDuration = 120
   const player1InputsByFrame = {}
-  const player2InputsByFrame = {0: new Set(['a'])}
-  for (let i = 0; i < frameDuration / 2; i++) {
-    player1InputsByFrame[i] = new Set(['right'])
+  const player2InputsByFrame = {}
+
+  for (let i = 0; i < frameDuration; i++) {
+    player1InputsByFrame[i] = new Set(['a'])
   }
+
+  for (let i = 0; i < frameDuration; i++) {
+    player2InputsByFrame[i] = new Set(['down'])
+  }
+
+  player2InputsByFrame['10'] = new Set(['a', 'down'])
   const state = JSON.parse(mainConstants.initialState)
+  state.player2.x = 400
   testScenario(state, player1InputsByFrame, player2InputsByFrame, frameDuration, 'Test 1')
 }
 

@@ -22,10 +22,10 @@ export const mainConstants = {
 }
 
 export function addDebug(state, debugConfig) {
-  // debug.addDebug(state, debugConfig)
-  // debug.test1()
-  // debug.test2()
-  // debug.test3()
+  debug.addDebug(state, debugConfig)
+  debug.test1()
+  debug.test2()
+  debug.test3()
 }
 
 export function initCanvas() {

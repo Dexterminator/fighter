@@ -50,6 +50,8 @@ function handleHit(player, otherPlayer) {
         player.state = playerStates.HITSTUN
         player.hp -= 10
         player.stun = 25
+        player.animation.state = null
+        player.animation.stateProgress = 0
       }
     }
   }
