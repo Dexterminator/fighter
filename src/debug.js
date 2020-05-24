@@ -82,7 +82,7 @@ export function test2() {
   }
 
   const state = JSON.parse(mainConstants.initialState)
-  state.player2.x = 430
+  state.player2.x = 400
   testScenario(state, player1InputsByFrame, player2InputsByFrame, frameDuration, 'Test 2')
 }
 

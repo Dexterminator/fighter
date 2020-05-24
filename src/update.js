@@ -3,7 +3,7 @@ import {
   animationStates,
   attackProperties,
   BLOCKING_STATES,
-  CROUCHING_STATES,
+  CROUCHING_STATES, GAME_WIDTH,
   nextAnimationState,
   orientations,
   PLAYER_CROUCHING_HEIGHT,
@@ -58,6 +58,7 @@ function handleHit(player, otherPlayer) {
 }
 
 function updatePlayer(player, otherPlayer, inputs) {
+  const prevX = player.x
   if (player.state === playerStates.HITSTUN) {
     player.stun--
     if (player.stun === 0) {
@@ -106,6 +107,11 @@ function updatePlayer(player, otherPlayer, inputs) {
       }
     }
   }
+
+  if (isOverlapping(player, otherPlayer.hand) || player.x < player.width * 0.7 || player.x > GAME_WIDTH - player.width * 0.7) {
+    player.x = prevX
+  }
+
   updateHand(player)
 }
 

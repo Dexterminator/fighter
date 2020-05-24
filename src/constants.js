@@ -51,7 +51,7 @@ export const STANDING_STATES = new Set([playerStates.IDLE, playerStates.WALKING]
 export const CROUCHING_STATES = new Set([playerStates.CROUCHING, playerStates.CROUCH_BLOCKING])
 export const BLOCKING_STATES = new Set([playerStates.BLOCKING, playerStates.CROUCH_BLOCKING])
 
-const PUNCH_RANGE = PLAYER_WIDTH * 2
+const PUNCH_RANGE = PLAYER_WIDTH * 1.5
 export const animations = Object.freeze({
   punch: {
     [animationStates.WINDUP]: {
