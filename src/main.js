@@ -22,8 +22,8 @@ export const mainConstants = {
   inputsByKey2: inputsByKey2
 }
 
-export function addDebug(state, debugConfig) {
-  debug.addDebug(state, debugConfig)
+export function addDebug() {
+  // debug.addDebug(state, debugConfig)
   debug.test1()
   debug.test2()
   debug.test3()

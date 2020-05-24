@@ -4,6 +4,7 @@ import {update} from "./main"
 import {startGame} from "./index"
 
 export function parseRemoteInput(remoteInput) {
+  // TODO: This can fail with Uncaught SyntaxError: Unexpected token o in JSON at position 1
   return JSON.parse(remoteInput, (key, value) => value instanceof Array ? new Set(value) : value)
 }
 
@@ -25,6 +26,7 @@ export function resolveNetworking(inputsByFrame, remoteInputsByFrame, statesByFr
     }
   }
 
+  // TODO: This can be undefined somehow!
   const state = JSON.parse(statesByFrame[latestSyncedFrame])
   for (let i = latestSyncedFrame + 1; i < currentFrame; i++) {
     if (playerId === 'player1') {
@@ -44,7 +46,12 @@ export function networkSendInputs(inputsByFrame) {
 }
 
 function appendControls() {
-
+  const div1 = document.createElement('div')
+  const div2 = document.createElement('div')
+  div1.textContent = 'Controls:'
+  div2.textContent = 'Left: A, Right: D, Crouch: S, Punch: C, Block: V'
+  document.body.append(div1)
+  document.body.append(div2)
 }
 
 export function initHostPeer() {
@@ -87,6 +94,7 @@ export function initHostPeer() {
     div3.remove()
     textArea.remove()
     button.remove()
+    appendControls()
     startGame(p, 'player1')
   })
 }
@@ -130,6 +138,7 @@ export function initGuestPeer() {
     div3.remove()
     textArea.remove()
     button.remove()
+    appendControls()
     startGame(p, 'player2')
   })
 }

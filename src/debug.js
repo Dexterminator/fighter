@@ -45,7 +45,7 @@ function networkTestScenario(initialState, player1InputsByFrame, remoteInputsByF
     if (remoteInputsByFrameByFrame.hasOwnProperty(frames)) {
       remoteInput = remoteInputsByFrameByFrame[frames]
     }
-    let [newLatestSyncedFrame, newInputsByFrame, newState] = resolveNetworking(player1InputsByFrame, remoteInput, statesByFrame, networkState.latestSyncedFrame, frames)
+    let [newLatestSyncedFrame, newInputsByFrame, newState] = resolveNetworking(player1InputsByFrame, remoteInput, statesByFrame, networkState.latestSyncedFrame, frames, 'player1')
     h1.innerHTML = title + ', frame: ' + frames
     h12.innerHTML = 'Player 1 input: [' + Array.from(player1InputsByFrame[frames] || []) + ']'
     h13.innerHTML =  'Predicting player 2 input: [' + Array.from(newInputsByFrame[frames]) + ']' + (remoteInputsByFrameByFrame.hasOwnProperty(frames) ? ' Update!' : '')

@@ -1,5 +1,5 @@
 import "./styles.css"
-import {initCanvas, mainConstants, render, update} from "./main"
+import {addDebug, initCanvas, mainConstants, render, update} from "./main"
 import {encodeInput, initGuestPeer, initHostPeer, parseRemoteInput, resolveNetworking, testPeer} from "./network"
 
 export function networkSendInputs(peer, inputsByFrame) {
@@ -10,12 +10,11 @@ export function networkSendInputs(peer, inputsByFrame) {
 export function startGame(peer, playerId) {
   let networkState = {
     latestSyncedFrame: -1,
-    remoteInputByFrame: {}
+    remoteInputByFrame: JSON.stringify({})
   }
 
   peer.on('data', data => {
     networkState.remoteInputByFrame = data
-    console.log('data: ' + data)
   })
 
   const canvas = initCanvas()
@@ -34,9 +33,6 @@ export function startGame(peer, playerId) {
   window.addEventListener('keydown', function (e) {
     currentInputs.add(mainConstants.inputsByKey[e.code])
     // player2Inputs.add(mainConstants.inputsByKey2[e.code])
-    if (e.code === 'Space') {
-      // initPeer()
-    }
   })
   window.addEventListener('keyup', function (e) {
     currentInputs.delete(mainConstants.inputsByKey[e.code])
@@ -47,7 +43,6 @@ export function startGame(peer, playerId) {
   function main() {
     let stopMain = window.requestAnimationFrame(main)
     localInputsByFrame[frames + mainConstants.FRAME_DELAY] = new Set(currentInputs)
-    console.log(frames)
     networkSendInputs(peer, localInputsByFrame)
     let [newLatestSyncedFrame, newInputsByFrame, newState] = resolveNetworking(localInputsByFrame, networkState.remoteInputByFrame, statesByFrame, networkState.latestSyncedFrame, frames)
     state = newState
@@ -62,8 +57,8 @@ export function startGame(peer, playerId) {
     statesByFrame[frames] = JSON.stringify(state)
     render(state, ctx, canvas)
     frames++
-    delete localInputsByFrame[frames - 10]
-    delete statesByFrame[frames - 10]
+    delete localInputsByFrame[frames - 30]
+    delete statesByFrame[frames - 30]
     if (state.player1.hp <= 0 && !hasWinner) {
       const h1 = document.createElement('h1')
       h1.textContent = 'Player 2 wins!'
@@ -95,11 +90,13 @@ export function startGame(peer, playerId) {
   } else if (location.hash === '#guest') {
     initGuestPeer()
   } else {
-
+    const div = document.createElement('div')
+    div.textContent = 'Go to https://fight.dxtr.se/#guest or https://fight.dxtr.se/#host to play online!'
+    document.body.append(div)
   }
 
   if (document.location.href.includes('localhost')) {
-    // addDebug(state, debugConfig)
+    addDebug()
   }
 })()
 
