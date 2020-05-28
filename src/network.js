@@ -4,7 +4,6 @@ import {update} from "./main"
 import {startGame} from "./index"
 
 export function parseRemoteInput(remoteInput) {
-  // TODO: This can fail with Uncaught SyntaxError: Unexpected token o in JSON at position 1
   return JSON.parse(remoteInput, (key, value) => value instanceof Array ? new Set(value) : value)
 }
 
@@ -12,7 +11,20 @@ export function encodeInput(input) {
   return JSON.stringify(input, (key, value) => value instanceof Set ? [...value] : value)
 }
 
-export function resolveNetworking(inputsByFrame, remoteInputsByFrame, statesByFrame, latestSyncedFrame, currentFrame, playerId) {
+function getInputsByPlayer(playerId, localInputsByFrame, remoteInputsByFrame) {
+  let player1InputsByFrame = null
+  let player2InputsByFrame = null
+  if (playerId === 'player1') {
+    player1InputsByFrame = localInputsByFrame
+    player2InputsByFrame = remoteInputsByFrame
+  } else {
+    player1InputsByFrame = remoteInputsByFrame
+    player2InputsByFrame = localInputsByFrame
+  }
+  return {player1InputsByFrame, player2InputsByFrame}
+}
+
+export function resolveNetworking(localInputsByFrame, remoteInputsByFrame, statesByFrame, latestSyncedFrame, currentFrame, playerId) {
   remoteInputsByFrame = remoteInputsByFrame || JSON.stringify({})
   remoteInputsByFrame = parseRemoteInput(remoteInputsByFrame)
   remoteInputsByFrame[-1] = new Set()
@@ -28,22 +40,14 @@ export function resolveNetworking(inputsByFrame, remoteInputsByFrame, statesByFr
 
   // TODO: This can be undefined when rift is too big
   const state = JSON.parse(statesByFrame[latestSyncedFrame])
+  let {player1InputsByFrame, player2InputsByFrame} = getInputsByPlayer(playerId, localInputsByFrame, remoteInputsByFrame)
   for (let i = latestSyncedFrame + 1; i < currentFrame; i++) {
-    // TODO: Do this in a nicer way somehow
-    if (playerId === 'player1') {
-      update(state, inputsByFrame[i], remoteInputsByFrame[i])
-    } else {
-      update(state, remoteInputsByFrame[i], inputsByFrame[i])
-    }
+    update(state, player1InputsByFrame[i], player2InputsByFrame[i])
     statesByFrame[i] = JSON.stringify(state)
   }
 
   delete remoteInputsByFrame[-1]
   return [newLatestSyncedFrame, remoteInputsByFrame, state]
-}
-
-export function networkSendInputs(inputsByFrame) {
-  const json = encodeInput(inputsByFrame)
 }
 
 function appendControls() {
