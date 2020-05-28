@@ -26,9 +26,10 @@ export function resolveNetworking(inputsByFrame, remoteInputsByFrame, statesByFr
     }
   }
 
-  // TODO: This can be undefined somehow!
+  // TODO: This can be undefined when rift is too big
   const state = JSON.parse(statesByFrame[latestSyncedFrame])
   for (let i = latestSyncedFrame + 1; i < currentFrame; i++) {
+    // TODO: Do this in a nicer way somehow
     if (playerId === 'player1') {
       update(state, inputsByFrame[i], remoteInputsByFrame[i])
     } else {
@@ -67,7 +68,6 @@ export function initHostPeer() {
   const textArea = document.createElement('textarea')
   const button = document.createElement("button")
   p.on('signal', data => {
-    console.log('SIGNAL', JSON.stringify(data))
     div.textContent = "Paste the below in the guest's form!"
     div2.textContent = JSON.stringify(data)
     div2.style = 'color: teal'
@@ -103,6 +103,7 @@ export function initGuestPeer() {
   const p = new SimplePeer({
     trickle: false
   })
+
   p.on('error', err => console.log('error', err))
 
   const div = document.createElement('div')
@@ -121,7 +122,6 @@ export function initGuestPeer() {
   const div3 = document.createElement('div')
 
   p.on('signal', data => {
-    console.log('SIGNAL', JSON.stringify(data))
     div2.textContent = "Paste this in the host's form!"
     div3.textContent = JSON.stringify(data)
     div3.style = 'color: teal'
